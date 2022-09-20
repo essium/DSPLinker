@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using UnityEngine;
 
 namespace DSPLinker
 {
@@ -10,7 +9,7 @@ namespace DSPLinker
             StringBuilder stringBuilder = new StringBuilder();
             foreach (var building in blueprint.buildings)
             {
-                if (LinkInfo.IsSorter(building.itemId))
+                if (Database.LDB.GetSorter(building.itemId) != null)
                 {
                     stringBuilder.Append("sorter " + building.index + ":\r\n");
                     if (building.inputObj == null)
@@ -40,7 +39,7 @@ namespace DSPLinker
             StringBuilder stringBuilder = new StringBuilder();
             foreach (var building in blueprint.buildings)
             {
-                if (LinkInfo.IsBelt(building.itemId))
+                if (Database.LDB.GetBelt(building.itemId) != null)
                 {
                     if (building.parameters != null && building.parameters.Length > 0)
                     {

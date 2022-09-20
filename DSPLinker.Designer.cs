@@ -39,6 +39,7 @@
             this.sorters = new System.Windows.Forms.ToolStripMenuItem();
             this.markers = new System.Windows.Forms.ToolStripMenuItem();
             this.belts = new System.Windows.Forms.ToolStripMenuItem();
+            this.debug = new System.Windows.Forms.ToolStripMenuItem();
             this.textBox = new System.Windows.Forms.TextBox();
             this.menu.SuspendLayout();
             this.SuspendLayout();
@@ -49,7 +50,8 @@
             this.menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.file,
             this.manipulate,
-            this.show});
+            this.show,
+            this.debug});
             this.menu.Location = new System.Drawing.Point(0, 0);
             this.menu.Name = "menu";
             this.menu.Size = new System.Drawing.Size(784, 25);
@@ -68,16 +70,16 @@
             // open
             // 
             this.open.Name = "open";
-            this.open.Size = new System.Drawing.Size(180, 22);
+            this.open.Size = new System.Drawing.Size(106, 22);
             this.open.Text = "open";
-            this.open.Click += new System.EventHandler(this.openMenuItemClicked);
+            this.open.Click += new System.EventHandler(this.Open);
             // 
             // save
             // 
             this.save.Name = "save";
-            this.save.Size = new System.Drawing.Size(180, 22);
+            this.save.Size = new System.Drawing.Size(106, 22);
             this.save.Text = "save";
-            this.save.Click += new System.EventHandler(this.saveMenuClicked);
+            this.save.Click += new System.EventHandler(this.Save);
             // 
             // manipulate
             // 
@@ -115,23 +117,30 @@
             // sorters
             // 
             this.sorters.Name = "sorters";
-            this.sorters.Size = new System.Drawing.Size(124, 22);
+            this.sorters.Size = new System.Drawing.Size(180, 22);
             this.sorters.Text = "sorters";
-            this.sorters.Click += new System.EventHandler(this.showSorters);
+            this.sorters.Click += new System.EventHandler(this.ShowSorters);
             // 
             // markers
             // 
             this.markers.Name = "markers";
-            this.markers.Size = new System.Drawing.Size(124, 22);
+            this.markers.Size = new System.Drawing.Size(180, 22);
             this.markers.Text = "markers";
-            this.markers.Click += new System.EventHandler(this.showMarers);
+            this.markers.Click += new System.EventHandler(this.ShowMarkers);
             // 
             // belts
             // 
             this.belts.Name = "belts";
-            this.belts.Size = new System.Drawing.Size(124, 22);
+            this.belts.Size = new System.Drawing.Size(180, 22);
             this.belts.Text = "belts";
-            this.belts.Click += new System.EventHandler(this.showBelts);
+            this.belts.Click += new System.EventHandler(this.ShowBelts);
+            // 
+            // debug
+            // 
+            this.debug.Name = "debug";
+            this.debug.Size = new System.Drawing.Size(58, 21);
+            this.debug.Text = "debug";
+            this.debug.Click += new System.EventHandler(this.Debug);
             // 
             // textBox
             // 
@@ -178,5 +187,6 @@
         private ToolStripMenuItem sorters;
         private ToolStripMenuItem markers;
         private ToolStripMenuItem belts;
+        private ToolStripMenuItem debug;
     }
 }

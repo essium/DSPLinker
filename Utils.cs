@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualBasic.Logging;
+﻿using DSPLinker.Database;
 using System.Text;
 
 namespace DSPLinker
@@ -40,7 +40,7 @@ namespace DSPLinker
             for (int i = 0; i < blueprint.buildings.Length; i++)
             {
                 BlueprintBuilding current = blueprint.buildings[i];
-                if (IsSorter(current.itemId))
+                if (Database.LDB.GetSorter(current.itemId) != null)
                 {
                     int itemId = current.filterId;
                     if (itemId != 0)
@@ -57,19 +57,19 @@ namespace DSPLinker
                         }
                     }
                 }
-                if (IsBelt(current.itemId))
+                if (Database.LDB.GetBelt(current.itemId) != null)
                 {
                     if (current.parameters != null && current.parameters.Length >= 1)
                     {
                         int mark = current.parameters[0];
                         if (!(current.outputObj == null || current.outputObj.parameters == null || current.outputObj.parameters.Length == 0))
                         {
-                            if (mark == (int)SIGN.ZERO)
+                            if (mark == 600)
                             {
                                 int itemId = current.outputObj.parameters[0];
                                 AddBelts(current, itemId, tmpInBelts);
                             }
-                            if (mark == (int)SIGN.ONE)
+                            if (mark == 601)
                             {
                                 int itemId = current.outputObj.parameters[0];
                                 AddBelts(current, itemId, tmpOutBelts);
@@ -85,7 +85,7 @@ namespace DSPLinker
 
         private static bool TooLong(BlueprintBuilding sorter, BlueprintBuilding belt, bool input)
         {
-            if (!IsBelt(belt.itemId))
+            if (Database.LDB.GetBelt(belt.itemId) == null)
             {
                 return false;
             }
@@ -116,16 +116,6 @@ namespace DSPLinker
             }
             return false;
         }
-        public static bool IsSorter(int itemId)
-        {
-            return sorters.Contains(itemId);
-        }
-
-        public static bool IsBelt(int itemId)
-        {
-            return belts.Contains(itemId);
-        }
-
         public string Link(BlueprintData blueprint)
         {
             StringBuilder stringBuilder= new StringBuilder();
@@ -137,11 +127,7 @@ namespace DSPLinker
                 int beltCount = beltIndexes.Count();
                 if (beltCount * 8 < sorterIndexes.Count)
                 {
-                    stringBuilder.Append("too many sorters to be link for input item: " + (ITEM) itemId + ", sorter/belt: " + sorterIndexes.Count + "/" + beltCount + "\r\n");
-                }
-                else
-                {
-                    stringBuilder.Append("input item: " + (ITEM) itemId + ", sorter/belt: " + sorterIndexes.Count() + "/" + beltCount + "\r\n");
+                    stringBuilder.Append(Database.LDB.GetItem(itemId).name + "的分拣器不足，分拣器/传送带数量：" + sorterIndexes.Count + "/" + beltCount + "\r\n");
                 }
                 for (int i = 0; i < sorterIndexes.Count; i++)
                 {
@@ -159,11 +145,7 @@ namespace DSPLinker
                 int beltCount = beltIndexes.Count();
                 if (beltCount * 8 < sorterIndexes.Count)
                 {
-                    stringBuilder.Append("too many sorters to be link for output item: " + (ITEM) itemId + ", sorter/belt: " + sorterIndexes.Count + "/" + beltCount + "\r\n");
-                }
-                else
-                {
-                    stringBuilder.Append("output item: " + (ITEM) itemId + ", sorter/belt: " + sorterIndexes.Count() + "/" + beltCount + "\r\n");
+                    stringBuilder.Append(Database.LDB.GetItem(itemId).name + "的分拣器不足，分拣器/传送带数量：" + sorterIndexes.Count + "/" + beltCount + "\r\n");
                 }
                 for (int i = 0; i < sorterIndexes.Count; i++)
                 {
@@ -195,20 +177,20 @@ namespace DSPLinker
             while (true)
             {
                 p = p.outputObj;
-                if (p == null || !IsBelt(p.itemId))
+                if (p == null || Database.LDB.GetBelt(p.itemId) == null)
                 {
                     break;
                 } else if (p.parameters == null || p.parameters.Length == 0)
                 {
                     tmp.Add(p.index);
-                } else if (p.parameters[0] == (int) SIGN.STOP)
+                } else if (p.parameters[0] == 506)
                 {
                     continue;
-                } else if (p.parameters[0] == (int) SIGN.ZERO)
+                } else if (p.parameters[0] == 600)
                 {
                     AddBelts(p, itemId, tmpInBelts);
                     break;
-                } else if (p.parameters[0] == (int) SIGN.ONE)
+                } else if (p.parameters[0] == 601)
                 {
                     AddBelts(p, itemId, tmpOutBelts);
                     break;
@@ -245,25 +227,6 @@ namespace DSPLinker
                     }
                 }
             }
-        }
-        private static HashSet<int> belts;
-        private static HashSet<int> sorters;
-
-        static LinkInfo()
-        {
-            belts = new HashSet<int>
-            {
-                (int) ITEM.BELT_1,
-                (int) ITEM.BELT_2,
-                (int) ITEM.BELT_3
-            };
-
-            sorters = new HashSet<int>
-            {
-                (int) ITEM.SORTER_1,
-                (int) ITEM.SORTER_2,
-                (int) ITEM.SORTER_3
-            };
         }
     }
 }
